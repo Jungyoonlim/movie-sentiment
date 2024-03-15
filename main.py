@@ -1,9 +1,14 @@
+from pyspark.sql import SparkSession
 from src.data.data_loader import load_data
 from src.data.preprocessing import preprocess_text
 from src.models.train import train_model
-from src.models.evaluate import evaluate_model 
+from src.models.evaluate import evaluate_model
 
 def main():
+    spark = SparkSession.builder \
+        .appName("TextClassification") \
+        .getOrCreate()
+
     train_data = load_data("data/raw/imdb/train")
     test_data = load_data("data/raw/imdb/test")
 
@@ -13,12 +18,9 @@ def main():
     print("Test Data:")
     test_data.show(5)
 
-    # load data 
-    raw_data = load_data()
-
-    # preprocess data
+    # Preprocess data
     preprocessed_train_data = preprocess_text(train_data)
-    preprocessed_test_data = preprocess_text(raw_data)
+    preprocessed_test_data = preprocess_text(test_data)
 
     print("Processed Train Data:")
     preprocessed_train_data.show(5)
