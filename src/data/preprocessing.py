@@ -15,7 +15,7 @@ def preprocess_text(data):
     data = idf.fit(data).transform(data)
     
     # Data Quality Checks
-    data = data.filter(data["text"].isNotNull())
+    data = data.filter(data["value"].isNotNull())
     data = data.filter(data["sentiment"].isin([0, 1]))
 
     # Data Mixture 

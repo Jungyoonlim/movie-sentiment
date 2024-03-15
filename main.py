@@ -7,7 +7,13 @@ from src.models.evaluate import evaluate_model
 def main():
     spark = SparkSession.builder \
         .appName("TextClassification") \
+        .config("spark.driver.memory", "8g") \
+        .config("spark.executor.memory", "8g") \
+        .config("spark.default.paralleism", "100") \
+        .config("spark.sql.shuffle.partitions", "100") \
         .getOrCreate()
+
+    spark.sparkContext.setLogLevel("INFO")
 
     train_data = load_data("data/raw/imdb/train")
     test_data = load_data("data/raw/imdb/test")
