@@ -4,15 +4,17 @@ from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
 
 def train_model(train_data):
     # Define the models
-    lr = LogisticRegression(labelCol="sentiment", featuresCol="tfidf")
-    rf = RandomForestClassifier(labelCol="sentiment", featuresCol="tfidf")
-    gbt = GBTClassifier(labelCol="sentiment", featuresCol="tfidf")
+    lr = LogisticRegression(maxIter=20, regParam=0.05, elasticNetParam=0.1)
+    rf = RandomForestClassifier(numTrees=200, maxDepth=10, featureSubsetStrategy="auto")
+    gbt = GBTClassifier(maxDepth=10, stepSize=0.01, subsamplingRate=0.8)
+
 
     # Define the parameter grid for hyperparameter tuning
     paramGrid = ParamGridBuilder() \
-        .addGrid(lr.regParam, [0.1, 0.01]) \
-        .addGrid(rf.numTrees, [50, 100]) \
-        .addGrid(gbt.maxDepth, [3, 5]) \
+        .addGrid(lr.regParam, [0.1, 0.01, 0.001]) \
+        .addGrid(lr.elasticNetParam, [0.0, 0.5, 1.0]) \
+        .addGrid(rf.numTrees, [50, 100, 200]) \
+        .addGrid(gbt.maxDepth, [5, 10, 20]) \
         .build()
 
     # Create the cross-validator

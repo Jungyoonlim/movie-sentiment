@@ -23,6 +23,6 @@ def preprocess_text(data):
     neg_count = data.filter(data["sentiment"] == 0).count()
     print (f"Positive count: {pos_count}, Negative count: {neg_count}")
 
-    return data
+    return pos_count, neg_count, data
 
 
